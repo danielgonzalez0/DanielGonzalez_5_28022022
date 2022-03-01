@@ -11,7 +11,7 @@ fetch('http://localhost:3000/api/products/')
     if (res.ok) {
       return res.json();
     }
-  })
+  }) // fin promise .then
 
   //promise pour ajouter les fiches pdts dans la page d'acceuil
   .then(function (array) {
@@ -29,10 +29,11 @@ fetch('http://localhost:3000/api/products/')
             </article>
           </a>`;
       itemElement.innerHTML = listOfProducts;
-    }
-  })
+    } // fin boucle for
+  }) // fin promise .then
 
   // gestion des erreurs sur chargment data via API
   .catch(function (error) {
-    alert(`l'erreur suivante est survenue ${error}`);
-  });
+    alert(`l'erreur suivante est survenue:
+     ${error}`);
+  }); // fin fct fetch
