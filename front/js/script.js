@@ -22,7 +22,7 @@ fetch('http://localhost:3000/api/products/')
             <article>
               <img
                 src=${array[prod].imageUrl}
-                alt=${array[prod].altTxt}
+                alt="${array[prod].altTxt}"
               />
               <h3 class="productName">${array[prod].name}</h3>
               <p class="productDescription">${array[prod].description}</p>
