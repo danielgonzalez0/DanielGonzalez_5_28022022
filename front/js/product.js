@@ -71,9 +71,9 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 
 let selectOptionColor = document.querySelector('#colors');
 let choixColor = '';
-let defaultColor = selectOptionColor.selectedIndex;
+//let defaultColor = selectOptionColor.selectedIndex;
 console.log(selectOptionColor.options);
-console.log(defaultColor.innerText);
+//console.log(defaultColor.innerText);
 
 selectOptionColor.addEventListener('change', () => {
   choixColor = selectOptionColor.options[selectOptionColor.selectedIndex].value;
