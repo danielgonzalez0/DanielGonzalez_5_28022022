@@ -61,4 +61,53 @@ for (let i = 0; i < localStorage.length; i++) {
                 </div>
               </article>`;
   positionAffichageAchat.insertAdjacentHTML('beforeend', listeDesAchats);
-}
+} //end boucle for
+
+//===================================================================================
+
+// Calculer quantité et prix total
+
+//===================================================================================
+
+//declaration des variables
+let quantiteSelection = document.querySelectorAll('.itemQuantity');
+let positionQuantiteTotale = document.getElementById('totalQuantity');
+let quantiteTotale = '';
+
+let prixSelection = document.querySelectorAll(
+  '.cart__item__content__description'
+);
+let poistionPrixTotal = document.getElementById('totalPrice');
+let prixTotal = '';
+
+//fonction calcul quantité
+const calculQuantite = () => {
+  let quantiteTotale = 0;
+  for (let quantite of quantiteSelection) {
+    quantiteTotale = quantiteTotale + parseInt(quantite.value);
+    console.log(quantiteTotale);
+  } //end boucle
+  return quantiteTotale;
+}; //end fonction
+
+//fonction calcul prix
+
+const calculPrix = () => {
+  let prixTotal = 0;
+  for (let i = 0; i < prixSelection.length; i++) {
+    //conversion string => number
+    let prixFormatTexte = prixSelection[i].lastElementChild.textContent;
+    prixFormatTexte = prixFormatTexte.replaceAll('\u202F', '');
+    let prixFormatNombre = parseInt(prixFormatTexte);
+    console.log(prixFormatNombre);
+    //calcul prix total
+    prixTotal = prixTotal + prixFormatNombre;
+  } //end boucle
+  return prixTotal;
+}; //end fonction
+
+// appel des fonctions pour afficher quantité et prix
+console.log(quantiteTotale);
+console.log(prixTotal);
+positionQuantiteTotale.innerText = calculQuantite();
+poistionPrixTotal.innerText = calculPrix();
