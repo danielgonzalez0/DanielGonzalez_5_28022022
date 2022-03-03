@@ -14,7 +14,7 @@ let listeDesAchats = '';
 for (let i = 0; i < localStorage.length; i++) {
   console.log(localStorage.getItem(localStorage.key(i)));
 
-  // récupérer et convertir en JS l'achat stocké dans le local storage (clé + valeurs) et
+  // récupérer et convertir en JS l'achat stocké dans le local storage (clé + valeurs)
   let achatRecupere = localStorage.getItem(localStorage.key(i));
   let achatFormate = JSON.parse(achatRecupere);
   console.log(achatFormate);
@@ -33,7 +33,7 @@ for (let i = 0; i < localStorage.length; i++) {
                 <div class="cart__item__img">
                   <img
                     src=${achatFormate[5]}
-                    alt="Photographie d'un canapé"
+                    alt="${achatFormate[6]}"
                   />
                 </div>
                 <div class="cart__item__content">

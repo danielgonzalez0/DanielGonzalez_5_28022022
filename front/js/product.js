@@ -102,6 +102,7 @@ ajoutPanier.addEventListener('click', () => {
   let produitNom = positionElementTitre.textContent;
   let produitPrix = positionElementPrix.textContent;
   let produitImageUrl = positionElementImg.firstChild.currentSrc;
+  let produitAltDescription = positionElementImg.firstChild.alt;
 
   let lignePanier = new Array(
     productId,
@@ -109,7 +110,8 @@ ajoutPanier.addEventListener('click', () => {
     choixQuantite,
     produitPrix,
     produitNom,
-    produitImageUrl
+    produitImageUrl,
+    produitAltDescription
   );
   lignePanier.name = `${productId}//${choixColor}`;
   console.log(lignePanier);
