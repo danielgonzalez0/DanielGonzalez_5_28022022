@@ -84,14 +84,17 @@ selectOptionColor.addEventListener('change', () => {
 let selectQuantite = document.querySelector('#quantity');
 let choixQuantite = 0;
 selectQuantite.addEventListener('change', () => {
-  if (selectQuantite.value <= 0 || selectQuantite.value > 100) {
-    alert('la quantité choisie doit être comprise entre 1 et 100');
-  } else {
+  try {
+    if (selectQuantite.value <= 0 || selectQuantite.value > 100)
+      throw 'la quantité choisie doit être comprise entre 1 et 100';
+
     choixQuantite = selectQuantite.value;
     console.log(choixQuantite);
 
     return choixQuantite;
-  }
+  } catch (error) {
+    alert(`L'erreur suivante est survenue: ${error}`);
+  } // end try & catch
 }); // end eventListener
 
 // -------création d'une ligne panier au clic du bouton------------
@@ -127,7 +130,6 @@ ajoutPanier.addEventListener('click', () => {
     lignePanier.name = `${productId}//${choixColor}`;
     console.log(lignePanier);
 
-    //end try
     //------------------------------------------------------------------
 
     // --------ajout de la ligne au local storage-----------------------
@@ -146,26 +148,31 @@ ajoutPanier.addEventListener('click', () => {
       let quantiteModifie = quantiteEnregistre + parseInt(choixQuantite);
       console.log(quantiteModifie);
 
-      //2) on met à jour la ligne de panier avec nouvelle quantité
-      lignePanier[2] = quantiteModifie;
-      console.log(lignePanier);
+      let questionUtilisateur =
+        confirm(`Vous avez déjà ${quantiteEnregistre} article(s) de ce produit dans votre panier.
+    Voulez-vous ajouter ${choixQuantite} article(s)`);
 
-      //3) on supprime la ligne du local storage
-      localStorage.removeItem(lignePanier.name);
+      if (questionUtilisateur) {
+        //2) on met à jour la ligne de panier avec nouvelle quantité
+        lignePanier[2] = quantiteModifie;
+        console.log(lignePanier);
 
-      //4) on crée la nouvelle ligne dans le local storage
+        //3) on supprime la ligne du local storage
+        localStorage.removeItem(lignePanier.name);
 
-      localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
-      console.log(ligneProduitsDansLocalStorage);
+        //4) on crée la nouvelle ligne dans le local storage
+
+        localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
+        console.log(ligneProduitsDansLocalStorage);
+        alert('Article(s) ajouté(s) au panier');
+      } //end if confirm
 
       //si la ligne n'est pas dans le local storage, on crée la ligne
     } else {
       localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
       console.log(ligneProduitsDansLocalStorage);
-    }
+    } // end try
   } catch (error) {
-    // end try
-
     alert(`L'erreur suivante est survenue: ${error}`);
   } // end catch
 
