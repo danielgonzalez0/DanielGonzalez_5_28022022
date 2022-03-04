@@ -71,8 +71,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 
 let selectOptionColor = document.querySelector('#colors');
 let choixColor = '';
-//let defaultColor = selectOptionColor.selectedIndex;
-console.log(selectOptionColor.options);
+//console.log(selectOptionColor.options);
 //console.log(defaultColor.innerText);
 
 selectOptionColor.addEventListener('change', () => {
@@ -90,6 +89,7 @@ selectQuantite.addEventListener('change', () => {
   } else {
     choixQuantite = selectQuantite.value;
     console.log(choixQuantite);
+
     return choixQuantite;
   }
 }); // end eventListener
@@ -99,57 +99,75 @@ selectQuantite.addEventListener('change', () => {
 let ajoutPanier = document.getElementById('addToCart');
 
 ajoutPanier.addEventListener('click', () => {
-  let produitNom = positionElementTitre.textContent;
-  let produitPrix = positionElementPrix.textContent;
-  let produitImageUrl = positionElementImg.firstChild.currentSrc;
-  let produitAltDescription = positionElementImg.firstChild.alt;
+  try {
+    //mise en place des exceptions personnalisées
 
-  let lignePanier = new Array(
-    productId,
-    choixColor,
-    choixQuantite,
-    produitPrix,
-    produitNom,
-    produitImageUrl,
-    produitAltDescription
-  );
-  lignePanier.name = `${productId}//${choixColor}`;
-  console.log(lignePanier);
-  //------------------------------------------------------------------
+    if (choixColor == '')
+      throw `La couleur sélectionnée n'a pas été prise dans le panier.
+    Veuillez (re)sélectionner une couleur.`;
 
-  // --------ajout de la ligne au local storage-----------------------
+    if (choixQuantite == 0)
+      throw `la quantité sélectionnée dans le panier est égale à 0.
+    Veuiilez (re)sélectionner une quantité`;
 
-  //vérifier si ligne de panier déjà dans le local storage
+    let produitNom = positionElementTitre.textContent;
+    let produitPrix = positionElementPrix.textContent;
+    let produitImageUrl = positionElementImg.firstChild.currentSrc;
+    let produitAltDescription = positionElementImg.firstChild.alt;
 
-  let ligneProduitsDansLocalStorage = JSON.parse(
-    localStorage.getItem(lignePanier.name)
-  ); //JSON.parse => converti les données JSON en données JS
-
-  //si ligne déjà dans le local storage:
-
-  //1) on modifie les quantités
-  if (ligneProduitsDansLocalStorage) {
-    let quantiteEnregistre = parseInt(ligneProduitsDansLocalStorage[2]);
-    let quantiteModifie = quantiteEnregistre + parseInt(choixQuantite);
-    console.log(quantiteModifie);
-
-    //2) on met à jour la ligne de panier avec nouvelle quantité
-    lignePanier[2] = quantiteModifie;
+    let lignePanier = new Array(
+      productId,
+      choixColor,
+      choixQuantite,
+      produitPrix,
+      produitNom,
+      produitImageUrl,
+      produitAltDescription
+    );
+    lignePanier.name = `${productId}//${choixColor}`;
     console.log(lignePanier);
 
-    //3) on supprime la ligne du local storage
-    localStorage.removeItem(lignePanier.name);
+    //end try
+    //------------------------------------------------------------------
 
-    //4) on crée la nouvelle ligne dans le local storage
+    // --------ajout de la ligne au local storage-----------------------
 
-    localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
-    console.log(ligneProduitsDansLocalStorage);
+    //vérifier si ligne de panier déjà dans le local storage
 
-    //si la ligne n'est pas dans le local storage, on crée la ligne
-  } else {
-    localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
-    console.log(ligneProduitsDansLocalStorage);
-  }
+    let ligneProduitsDansLocalStorage = JSON.parse(
+      localStorage.getItem(lignePanier.name)
+    ); //JSON.parse => converti les données JSON en données JS
+
+    //si ligne déjà dans le local storage:
+
+    //1) on modifie les quantités
+    if (ligneProduitsDansLocalStorage) {
+      let quantiteEnregistre = parseInt(ligneProduitsDansLocalStorage[2]);
+      let quantiteModifie = quantiteEnregistre + parseInt(choixQuantite);
+      console.log(quantiteModifie);
+
+      //2) on met à jour la ligne de panier avec nouvelle quantité
+      lignePanier[2] = quantiteModifie;
+      console.log(lignePanier);
+
+      //3) on supprime la ligne du local storage
+      localStorage.removeItem(lignePanier.name);
+
+      //4) on crée la nouvelle ligne dans le local storage
+
+      localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
+      console.log(ligneProduitsDansLocalStorage);
+
+      //si la ligne n'est pas dans le local storage, on crée la ligne
+    } else {
+      localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
+      console.log(ligneProduitsDansLocalStorage);
+    }
+  } catch (error) {
+    // end try
+
+    alert(`L'erreur suivante est survenue: ${error}`);
+  } // end catch
 
   //------------------------------------------------------------------
 }); // end eventlistener
