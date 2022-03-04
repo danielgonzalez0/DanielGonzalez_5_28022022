@@ -148,24 +148,32 @@ ajoutPanier.addEventListener('click', () => {
       let quantiteModifie = quantiteEnregistre + parseInt(choixQuantite);
       console.log(quantiteModifie);
 
-      let questionUtilisateur =
-        confirm(`Vous avez déjà ${quantiteEnregistre} article(s) de ce produit dans votre panier.
+      //test quantité <= 100
+
+      if (quantiteModifie > 100) {
+        alert(
+          `100 articles maximum du même produit sont autorisés dans le panier`
+        );
+      } else {
+        let questionUtilisateur =
+          confirm(`Vous avez déjà ${quantiteEnregistre} article(s) de ce produit dans votre panier.
     Voulez-vous ajouter ${choixQuantite} article(s)`);
 
-      if (questionUtilisateur) {
-        //2) on met à jour la ligne de panier avec nouvelle quantité
-        lignePanier[2] = quantiteModifie;
-        console.log(lignePanier);
+        if (questionUtilisateur) {
+          //2) on met à jour la ligne de panier avec nouvelle quantité
+          lignePanier[2] = quantiteModifie;
+          console.log(lignePanier);
 
-        //3) on supprime la ligne du local storage
-        localStorage.removeItem(lignePanier.name);
+          //3) on supprime la ligne du local storage
+          localStorage.removeItem(lignePanier.name);
 
-        //4) on crée la nouvelle ligne dans le local storage
+          //4) on crée la nouvelle ligne dans le local storage
 
-        localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
-        console.log(ligneProduitsDansLocalStorage);
-        alert('Article(s) ajouté(s) au panier');
-      } //end if confirm
+          localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
+          console.log(ligneProduitsDansLocalStorage);
+          alert('Article(s) ajouté(s) au panier');
+        } //end if confirm
+      } // end if test quantité
 
       //si la ligne n'est pas dans le local storage, on crée la ligne
     } else {
