@@ -22,7 +22,7 @@ for (let i = 0; i < localStorage.length; i++) {
   //Ajuster le prix en fonction des quantités
   let achatQuantite = parseInt(achatFormate[2]);
   let achatPrix = parseInt(achatFormate[3]);
-  let achatTotal = achatQuantite * achatPrix;
+  let achatTotal = achatQuantite * achatPrix; // a retirer
 
   // créer le récapitulatif de l'achat dans le panier
   listeDesAchats = ` <article
@@ -40,7 +40,7 @@ for (let i = 0; i < localStorage.length; i++) {
                   <div class="cart__item__content__description">
                     <h2>${achatFormate[4]}</h2>
                     <p>${achatFormate[1]}</p>
-                    <p>${achatTotal.toLocaleString()},00 €</p>
+                    <p>${achatPrix.toLocaleString()},00 €</p>
                   </div>
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
@@ -74,9 +74,12 @@ let quantiteSelection = document.querySelectorAll('.itemQuantity');
 let positionQuantiteTotale = document.getElementById('totalQuantity');
 let quantiteTotale = '';
 
-let prixSelection = document.querySelectorAll(
+/*let prixSelection = document.querySelectorAll(
   '.cart__item__content__description'
-);
+);*/
+
+let prixSelection = document.querySelectorAll('.cart__item__content');
+
 let poistionPrixTotal = document.getElementById('totalPrice');
 let prixTotal = '';
 
@@ -95,13 +98,20 @@ const calculQuantite = () => {
 const calculPrix = () => {
   let prixTotal = 0;
   for (let i = 0; i < prixSelection.length; i++) {
+    //selection de l'élément ou se trouve le prix unitaire
+    let prixFormatTexte = prixSelection[i].querySelector(
+      '.cart__item__content__description'
+    ).lastElementChild.textContent;
     //conversion string => number
-    let prixFormatTexte = prixSelection[i].lastElementChild.textContent;
     prixFormatTexte = prixFormatTexte.replaceAll('\u202F', '');
     let prixFormatNombre = parseInt(prixFormatTexte);
     console.log(prixFormatNombre);
+    //selection de l'élément ou se trouve la quantité
+    let quantiteProduit = prixSelection[i].querySelector('.itemQuantity').value;
+    //calcul Prix du produit
+    let prixProduit = quantiteProduit * prixFormatNombre;
     //calcul prix total
-    prixTotal = prixTotal + prixFormatNombre;
+    prixTotal = prixTotal + prixProduit;
   } //end boucle
   return prixTotal;
 }; //end fonction
