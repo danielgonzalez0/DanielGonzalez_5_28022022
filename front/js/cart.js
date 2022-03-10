@@ -74,12 +74,7 @@ let quantiteSelection = document.querySelectorAll('.itemQuantity');
 let positionQuantiteTotale = document.getElementById('totalQuantity');
 let quantiteTotale = '';
 
-/*let prixSelection = document.querySelectorAll(
-  '.cart__item__content__description'
-);*/
-
 let prixSelection = document.querySelectorAll('.cart__item__content');
-
 let poistionPrixTotal = document.getElementById('totalPrice');
 let prixTotal = '';
 
@@ -121,3 +116,46 @@ console.log(quantiteTotale);
 console.log(prixTotal);
 positionQuantiteTotale.innerText = calculQuantite();
 poistionPrixTotal.innerText = calculPrix();
+
+//===================================================================================
+
+// gestion du bouton supprimer un article du panier
+
+//===================================================================================
+
+//selection des boutons supprimer du panier
+let boutonSupprimer = document.querySelectorAll('.deleteItem');
+console.log(boutonSupprimer);
+
+//boucle pour parcourir tous les boutons et mettre en place eventListener
+for (let i = 0; i < boutonSupprimer.length; i++) {
+  boutonSupprimer[i].addEventListener('click', (event) => {
+    event.preventDefault();
+
+    //step1 récupérer ID et couleur
+    let sectionASupprimer = boutonSupprimer[i].closest('.cart__item');
+    let couleurProduitASupprimer = sectionASupprimer.getAttribute('data-color');
+    let idProduitASupprimer = sectionASupprimer.getAttribute('data-id');
+    //step2 définir clé storage a supprimer
+    let keyLocaleStorageAsupprimer = `${idProduitASupprimer}//${couleurProduitASupprimer}`;
+    //step 3 Demander à l'utilisateur de confirmer la suppression de l'article
+    let articleASupprimer = JSON.parse(
+      localStorage.getItem(keyLocaleStorageAsupprimer)
+    );
+    let questionUtilisateur = confirm(
+      `Voulez-vous supprimer l'article ${articleASupprimer[4]} du panier ?`
+    );
+    if (questionUtilisateur) {
+      //step 4 Supprimer l'article du local storage
+      localStorage.removeItem(keyLocaleStorageAsupprimer);
+      //step 5recharger la page pour mettre à jour panier et totaux
+      window.location.href = 'cart.html';
+    } //end if confirmation suppression
+
+    console.log('=======test article a supprimer ===========');
+    console.log(idProduitASupprimer);
+    console.log(keyLocaleStorageAsupprimer);
+    console.log(articleASupprimer);
+    console.log('=======test article a supprimer ===========');
+  }); // end fct callback du listener
+} //end boucle for
