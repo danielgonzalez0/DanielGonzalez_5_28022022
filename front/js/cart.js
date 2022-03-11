@@ -241,29 +241,42 @@ const resetMessageErreurValidation = (champ) => {
   valide = true;
 }; //end fonction
 
-console.log('=====test formulaire======');
+/*console.log('=====test formulaire======');
 console.log(formulaireCommande);
 console.log(champsFormulaire);
-console.log('=====test formulaire======');
+console.log('=====test formulaire======');*/
 
 //declaration fonction validation prénom
 
 const validationPrenom = () => {
   let champPrenom = document.getElementById('firstName');
-  let regexPrenom = /^[A-Za-z]{3,20}$/;
-  let messageErreur = `Le Prénom doit contenir entre 3 et 20 caractères et ne doit pas contenir de chiffres`;
+  let regexPrenom = /^[a-zA-Z -]{3,20}$/;
+  let messageErreur = `Le Prénom doit contenir entre 3 et 20 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
   let testPrenom = regexPrenom.test(champPrenom.value);
-  console.log('=====test validation prenom=====');
+  /* console.log('=====test validation prenom=====');
   console.log('valeur dans champ prénom :' + champPrenom.value);
   console.log(regexPrenom);
   console.log('resultat test prenom: ' + testPrenom);
   console.log(messageErreur);
   console.log('valide = ' + valide);
-  console.log('=====test validation prenom=====');
+  console.log('=====test validation prenom=====');*/
   if (testPrenom) {
     return true;
   } else {
     champPrenom.nextElementSibling.textContent = messageErreur;
+    return false;
+  } //end if
+}; //end fonction prenom
+
+const validationNom = () => {
+  let champNom = document.getElementById('lastName');
+  let regexNom = /^[a-zA-Z -]{3,30}$/;
+  let messageErreur = `Le Nom doit contenir entre 3 et 30 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
+  let testNom = regexNom.test(champNom.value);
+  if (testNom) {
+    return true;
+  } else {
+    champNom.nextElementSibling.textContent = messageErreur;
     return false;
   } //end if
 }; //end fonction prenom
@@ -293,6 +306,9 @@ champsFormulaire.forEach((champ) => {
       case 'firstName':
         validationPrenom();
         break;
+      case 'lastName':
+        validationNom();
+        break;
       default:
         validationChamp(champ);
     } //end switch
@@ -314,6 +330,10 @@ formulaireCommande.addEventListener('submit', (event) => {
     switch (champ.name) {
       case 'firstName':
         if (!validationPrenom()) {
+          valide = false;
+        } //end if
+      case 'lastName':
+        if (!validationNom()) {
           valide = false;
         } //end if
         break;
