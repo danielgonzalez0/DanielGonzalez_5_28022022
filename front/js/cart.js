@@ -12,17 +12,16 @@ let listeDesAchats = '';
 //boucle pour récupérer les achats dans le localStorage et créer le tableau récap
 
 for (let i = 0; i < localStorage.length; i++) {
-  console.log(localStorage.getItem(localStorage.key(i)));
+  // console.log(localStorage.getItem(localStorage.key(i)));
 
   // récupérer et convertir en JS l'achat stocké dans le local storage (clé + valeurs)
   let achatRecupere = localStorage.getItem(localStorage.key(i));
   let achatFormate = JSON.parse(achatRecupere);
-  console.log(achatFormate);
+  //console.log(achatFormate);
 
   //Ajuster le prix en fonction des quantités
   let achatQuantite = parseInt(achatFormate[2]);
   let achatPrix = parseInt(achatFormate[3]);
-  let achatTotal = achatQuantite * achatPrix; // a retirer
 
   // créer le récapitulatif de l'achat dans le panier
   listeDesAchats = ` <article
@@ -83,7 +82,7 @@ const calculQuantite = () => {
   let quantiteTotale = 0;
   for (let quantite of quantiteSelection) {
     quantiteTotale = quantiteTotale + parseInt(quantite.value);
-    console.log(quantiteTotale);
+    // console.log(quantiteTotale);
   } //end boucle
   return quantiteTotale;
 }; //end fonction
@@ -100,7 +99,7 @@ const calculPrix = () => {
     //conversion string => number
     prixFormatTexte = prixFormatTexte.replaceAll('\u202F', '');
     let prixFormatNombre = parseInt(prixFormatTexte);
-    console.log(prixFormatNombre);
+    //console.log(prixFormatNombre);
     //selection de l'élément ou se trouve la quantité
     let quantiteProduit = prixSelection[i].querySelector('.itemQuantity').value;
     //calcul Prix du produit
@@ -112,8 +111,8 @@ const calculPrix = () => {
 }; //end fonction
 
 // appel des fonctions pour afficher quantité et prix
-console.log(quantiteTotale);
-console.log(prixTotal);
+//console.log(quantiteTotale);
+//console.log(prixTotal);
 positionQuantiteTotale.innerText = calculQuantite();
 poistionPrixTotal.innerText = calculPrix();
 
@@ -125,7 +124,7 @@ poistionPrixTotal.innerText = calculPrix();
 
 //selection des boutons supprimer du panier
 let boutonSupprimer = document.querySelectorAll('.deleteItem');
-console.log(boutonSupprimer);
+//console.log(boutonSupprimer);
 
 //boucle pour parcourir tous les boutons et mettre en place eventListener
 for (let i = 0; i < boutonSupprimer.length; i++) {
@@ -168,7 +167,6 @@ for (let i = 0; i < boutonSupprimer.length; i++) {
 
 //selection des zones ou les quantités peuvent être modifiés
 let zoneQuantiteAModifier = document.querySelectorAll('.itemQuantity');
-console.log(zoneQuantiteAModifier);
 
 //boucle pour parcourir tous les boutons et mettre en place eventListener
 for (let i = 0; i < zoneQuantiteAModifier.length; i++) {
@@ -225,3 +223,118 @@ for (let i = 0; i < zoneQuantiteAModifier.length; i++) {
     } // end try & catch
   }); //end event listener
 } //end boucle for
+
+//===================================================================================
+
+// gestion validation des données du formulaire
+
+//===================================================================================
+
+//declararion variable
+let formulaireCommande = document.querySelector('.cart__order__form');
+let champsFormulaire = document.querySelectorAll('input[required]');
+let valide = true;
+
+//declaration fonction reset du message d'erreur
+const resetMessageErreurValidation = (champ) => {
+  champ.nextElementSibling.textContent = '';
+  valide = true;
+}; //end fonction
+
+console.log('=====test formulaire======');
+console.log(formulaireCommande);
+console.log(champsFormulaire);
+console.log('=====test formulaire======');
+
+//declaration fonction validation prénom
+
+const validationPrenom = () => {
+  let champPrenom = document.getElementById('firstName');
+  let regexPrenom = /^[A-Za-z]{3,20}$/;
+  let messageErreur = `Le Prénom doit contenir entre 3 et 20 caractères et ne doit pas contenir de chiffres`;
+  let testPrenom = regexPrenom.test(champPrenom.value);
+
+  if (testPrenom) {
+    console.log('=====test validation prenom=====');
+    console.log('valeur dans champ prénom :' + champPrenom.value);
+    console.log(regexPrenom);
+    console.log('resultat test prenom: ' + testPrenom);
+    console.log(messageErreur);
+    console.log('valide = ' + valide);
+    console.log('=====test validation prenom=====');
+    return true;
+  } else {
+    champPrenom.nextElementSibling.textContent = messageErreur;
+    console.log('=====test validation prenom=====');
+    console.log('valeur dans champ prénom :' + champPrenom.value);
+    console.log(regexPrenom);
+    console.log('resultat test prenom: ' + testPrenom);
+    console.log(messageErreur);
+    console.log('valide = ' + valide);
+    console.log('=====test validation prenom=====');
+    return false;
+  } //end if
+}; //end fonction prenom
+
+//declaration fonction test validité champ selon règle navigateur
+const validationChamp = (champ) => {
+  if (champ.checkValidity()) {
+    /* switch (champ.name) {
+      case 'firstName':
+        validationPrenom();
+        break;
+      default:*/
+    return true;
+    //end switch
+  } else {
+    champ.nextElementSibling.textContent = champ.validationMessage; // prop => message
+    return false;
+  } // end if
+}; //end fonction
+
+//mise en place ecoute validation de chaque champ du formulaire
+
+//----------------------------------------------------------
+//automatisation gestion par défaut des navigateurs
+//----------------------------------------------------------
+
+champsFormulaire.forEach((champ) => {
+  champ.addEventListener('focus', () => {
+    resetMessageErreurValidation(champ);
+  }); // end event focus
+  champ.addEventListener('blur', () => {
+    validationChamp(champ);
+  }); //end event blur
+}); // end for each
+
+//end event focus
+
+formulaireCommande.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  // mise en place boucle pour vérifier validité de chaque champ
+
+  champsFormulaire.forEach((champ) => {
+    resetMessageErreurValidation(champ);
+  }); // boucle for each
+
+  champsFormulaire.forEach((champ) => {
+    if (!validationChamp(champ)) {
+      valide = false;
+      console.log("=====test validation d'un champ=====");
+      console.log(champ.name);
+      console.log('resultat valide : ' + valide);
+      console.log("=====test validation d'un champ=====");
+    }
+    //end if
+  }); // boucle for each
+
+  console.log('apres la boucle submit, valide = ' + valide);
+
+  if (valide) {
+    confirm('le formulaire est envoyé');
+  } //end if
+  //----------------------------------------------------------
+  //test validation du champ prénom
+  //----------------------------------------------------------
+}); //end eventlistener
