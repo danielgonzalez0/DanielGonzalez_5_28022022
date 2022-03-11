@@ -159,3 +159,69 @@ for (let i = 0; i < boutonSupprimer.length; i++) {
     console.log('=======test article a supprimer ===========');
   }); // end fct callback du listener
 } //end boucle for
+
+//===================================================================================
+
+// gestion de la fonction modifier la quantité d'un article dans le panier
+
+//===================================================================================
+
+//selection des zones ou les quantités peuvent être modifiés
+let zoneQuantiteAModifier = document.querySelectorAll('.itemQuantity');
+console.log(zoneQuantiteAModifier);
+
+//boucle pour parcourir tous les boutons et mettre en place eventListener
+for (let i = 0; i < zoneQuantiteAModifier.length; i++) {
+  zoneQuantiteAModifier[i].addEventListener('focusout', (event) => {
+    event.preventDefault();
+    let quantiteModifie = parseInt(zoneQuantiteAModifier[i].value);
+
+    //step 1 test de la valeur saisie et gestion des exceptions
+    try {
+      if (quantiteModifie <= 0 || quantiteModifie > 100)
+        throw 'la quantité saisie doit être comprise entre 1 et 100';
+      if (isNaN(quantiteModifie))
+        throw `la quantité doit être un nombre compris entre 1 et 100`;
+
+      //step 2 récupérer ID et couleur
+      let sectionAModifier = zoneQuantiteAModifier[i].closest('.cart__item');
+      let couleurProduitAModifier = sectionAModifier.getAttribute('data-color');
+      let idProduitAModifier = sectionAModifier.getAttribute('data-id');
+      //step 3 définir clé storage a modifier
+      let keyLocaleStorageAModifier = `${idProduitAModifier}//${couleurProduitAModifier}`;
+
+      //step 4 Demander à l'utilisateur de confirmer la modification de l'article
+      let articleAModifier = JSON.parse(
+        localStorage.getItem(keyLocaleStorageAModifier)
+      );
+      let questionUtilisateur = confirm(
+        `Voulez-vous modifier la quantité d'article du produit ${articleAModifier[4]} ?
+        
+        La nouvelle quantité sera égale à ${quantiteModifie}.`
+      );
+      if (questionUtilisateur) {
+        //step 5 Modifier la quantité dans le panier
+        articleAModifier[2] = quantiteModifie;
+        //step 6 Supprimer l'article du local storage
+        localStorage.removeItem(keyLocaleStorageAModifier);
+        //step 7 on crée la nouvelle ligne dans le local storage
+        localStorage.setItem(
+          keyLocaleStorageAModifier,
+          JSON.stringify(articleAModifier)
+        );
+        //step 8 recharger la page pour mettre à jour panier et totaux
+        window.location.href = 'cart.html';
+      } //end if confirmation modification
+
+      console.log('=====test modification quantité======');
+      console.log(quantiteModifie);
+      console.log(keyLocaleStorageAModifier);
+      console.log(articleAModifier);
+      console.log('=====test modification quantité======');
+    } catch (error) {
+      alert(`L'erreur suivante est survenue: 
+      
+      ${error}`);
+    } // end try & catch
+  }); //end event listener
+} //end boucle for
