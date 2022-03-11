@@ -253,25 +253,17 @@ const validationPrenom = () => {
   let regexPrenom = /^[A-Za-z]{3,20}$/;
   let messageErreur = `Le Prénom doit contenir entre 3 et 20 caractères et ne doit pas contenir de chiffres`;
   let testPrenom = regexPrenom.test(champPrenom.value);
-
+  console.log('=====test validation prenom=====');
+  console.log('valeur dans champ prénom :' + champPrenom.value);
+  console.log(regexPrenom);
+  console.log('resultat test prenom: ' + testPrenom);
+  console.log(messageErreur);
+  console.log('valide = ' + valide);
+  console.log('=====test validation prenom=====');
   if (testPrenom) {
-    console.log('=====test validation prenom=====');
-    console.log('valeur dans champ prénom :' + champPrenom.value);
-    console.log(regexPrenom);
-    console.log('resultat test prenom: ' + testPrenom);
-    console.log(messageErreur);
-    console.log('valide = ' + valide);
-    console.log('=====test validation prenom=====');
     return true;
   } else {
     champPrenom.nextElementSibling.textContent = messageErreur;
-    console.log('=====test validation prenom=====');
-    console.log('valeur dans champ prénom :' + champPrenom.value);
-    console.log(regexPrenom);
-    console.log('resultat test prenom: ' + testPrenom);
-    console.log(messageErreur);
-    console.log('valide = ' + valide);
-    console.log('=====test validation prenom=====');
     return false;
   } //end if
 }; //end fonction prenom
@@ -279,13 +271,7 @@ const validationPrenom = () => {
 //declaration fonction test validité champ selon règle navigateur
 const validationChamp = (champ) => {
   if (champ.checkValidity()) {
-    /* switch (champ.name) {
-      case 'firstName':
-        validationPrenom();
-        break;
-      default:*/
     return true;
-    //end switch
   } else {
     champ.nextElementSibling.textContent = champ.validationMessage; // prop => message
     return false;
@@ -303,7 +289,13 @@ champsFormulaire.forEach((champ) => {
     resetMessageErreurValidation(champ);
   }); // end event focus
   champ.addEventListener('blur', () => {
-    validationChamp(champ);
+    switch (champ.name) {
+      case 'firstName':
+        validationPrenom();
+        break;
+      default:
+        validationChamp(champ);
+    } //end switch
   }); //end event blur
 }); // end for each
 
@@ -319,14 +311,22 @@ formulaireCommande.addEventListener('submit', (event) => {
   }); // boucle for each
 
   champsFormulaire.forEach((champ) => {
-    if (!validationChamp(champ)) {
-      valide = false;
-      console.log("=====test validation d'un champ=====");
-      console.log(champ.name);
-      console.log('resultat valide : ' + valide);
-      console.log("=====test validation d'un champ=====");
-    }
-    //end if
+    switch (champ.name) {
+      case 'firstName':
+        if (!validationPrenom()) {
+          valide = false;
+        } //end if
+        break;
+      default:
+        if (!validationChamp(champ)) {
+          valide = false;
+          console.log("=====test validation d'un champ=====");
+          console.log(champ.name);
+          console.log('resultat valide : ' + valide);
+          console.log("=====test validation d'un champ=====");
+        }
+      //end if
+    } //end switch
   }); // boucle for each
 
   console.log('apres la boucle submit, valide = ' + valide);
