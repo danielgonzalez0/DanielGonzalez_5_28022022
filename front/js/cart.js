@@ -250,8 +250,8 @@ console.log('=====test formulaire======');*/
 
 const validationPrenom = () => {
   let champPrenom = document.getElementById('firstName');
-  let regexPrenom = /^[a-zA-Z -]{3,20}$/;
-  let messageErreur = `Le Prénom doit contenir entre 3 et 20 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
+  let regexPrenom = /^[A-Z]+[a-zA-ZÀ-ÿ -]{3,20}$/;
+  let messageErreur = `Le Prénom doit commencer par une majuscule, contenir entre 3 et 20 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
   let testPrenom = regexPrenom.test(champPrenom.value);
   /* console.log('=====test validation prenom=====');
   console.log('valeur dans champ prénom :' + champPrenom.value);
@@ -268,10 +268,12 @@ const validationPrenom = () => {
   } //end if
 }; //end fonction prenom
 
+//declaration fonction validation nom
+
 const validationNom = () => {
   let champNom = document.getElementById('lastName');
-  let regexNom = /^[a-zA-Z -]{3,30}$/;
-  let messageErreur = `Le Nom doit contenir entre 3 et 30 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
+  let regexNom = /^[A-Z]+[a-zA-ZÀ-ÿ -]{3,30}$/;
+  let messageErreur = `Le Nom doit commencer par une majuscule, contenir entre 3 et 30 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
   let testNom = regexNom.test(champNom.value);
   if (testNom) {
     return true;
@@ -279,7 +281,23 @@ const validationNom = () => {
     champNom.nextElementSibling.textContent = messageErreur;
     return false;
   } //end if
-}; //end fonction prenom
+}; //end fonction nom
+
+//declaration fonction validation Adresse
+
+const validationAdresse = () => {
+  let champAdresse = document.getElementById('address');
+  let regexAdresse =
+    /^[a-zA-ZÀ-ÿ0-9 -',]{3,60}[^\[\](%#"@=}{}$£¤µ*§!:/;.?¨^|)]$/;
+  let messageErreur = `L'adresse doit contenir entre 3 et 60 caractères et ne doit pas contenir de caractères spéciaux suivant : [](%#"@=}{}$£¤µ*§!:/;.?¨^|)`;
+  let testAdresse = regexAdresse.test(champAdresse.value);
+  if (testAdresse) {
+    return true;
+  } else {
+    champAdresse.nextElementSibling.textContent = messageErreur;
+    return false;
+  } //end if
+}; //end fonction nom
 
 //declaration fonction test validité champ selon règle navigateur
 const validationChamp = (champ) => {
@@ -290,6 +308,21 @@ const validationChamp = (champ) => {
     return false;
   } // end if
 }; //end fonction
+
+//declaration fonction validation ville
+
+const validationVille = () => {
+  let champVille = document.getElementById('city');
+  let regexVille = /^[A-Z]+[a-zA-ZÀ-ÿ -]{3,40}$/;
+  let messageErreur = `La Ville doit commencer par une majuscule, contenir entre 3 et 30 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
+  let testVille = regexVille.test(champVille.value);
+  if (testVille) {
+    return true;
+  } else {
+    champVille.nextElementSibling.textContent = messageErreur;
+    return false;
+  } //end if
+}; //end fonction nom
 
 //mise en place ecoute validation de chaque champ du formulaire
 
@@ -308,6 +341,12 @@ champsFormulaire.forEach((champ) => {
         break;
       case 'lastName':
         validationNom();
+        break;
+      case 'address':
+        validationAdresse();
+        break;
+      case 'city':
+        validationVille();
         break;
       default:
         validationChamp(champ);
@@ -337,6 +376,16 @@ formulaireCommande.addEventListener('submit', (event) => {
           valide = false;
         } //end if
         break;
+      case 'address':
+        if (!validationAdresse()) {
+          valide = false;
+        } //end if
+        break;
+      case 'city':
+        if (!validationVille()) {
+          valide = false;
+        } //end if
+        break;
       default:
         if (!validationChamp(champ)) {
           valide = false;
@@ -354,7 +403,4 @@ formulaireCommande.addEventListener('submit', (event) => {
   if (valide) {
     confirm('le formulaire est envoyé');
   } //end if
-  //----------------------------------------------------------
-  //test validation du champ prénom
-  //----------------------------------------------------------
 }); //end eventlistener
