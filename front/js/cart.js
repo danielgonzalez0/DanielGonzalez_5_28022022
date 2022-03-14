@@ -170,8 +170,14 @@ let zoneQuantiteAModifier = document.querySelectorAll('.itemQuantity');
 
 //boucle pour parcourir tous les boutons et mettre en place eventListener
 for (let i = 0; i < zoneQuantiteAModifier.length; i++) {
-  zoneQuantiteAModifier[i].addEventListener('focusout', (event) => {
+  zoneQuantiteAModifier[i].addEventListener('change', (event) => {
     event.preventDefault();
+    event.target.focus(); // pour résoudre problème lié à firefox (input type number ne déclenche pas le focus quand on change la quantité)
+  }); //end listener change
+
+  zoneQuantiteAModifier[i].addEventListener('blur', (event) => {
+    event.preventDefault();
+
     let quantiteModifie = parseInt(zoneQuantiteAModifier[i].value);
 
     //step 1 test de la valeur saisie et gestion des exceptions
@@ -250,7 +256,7 @@ console.log('=====test formulaire======');*/
 
 const validationPrenom = () => {
   let champPrenom = document.getElementById('firstName');
-  let regexPrenom = /^[A-Z]+[a-zA-ZÀ-ÿ -]{3,20}$/;
+  let regexPrenom = /^[A-Za-zA-ZÀ-ÿ -]{3,20}$/;
   let messageErreur = `Le Prénom doit commencer par une majuscule, contenir entre 3 et 20 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
   let testPrenom = regexPrenom.test(champPrenom.value);
   /* console.log('=====test validation prenom=====');
@@ -272,7 +278,7 @@ const validationPrenom = () => {
 
 const validationNom = () => {
   let champNom = document.getElementById('lastName');
-  let regexNom = /^[A-Z]+[a-zA-ZÀ-ÿ -]{3,30}$/;
+  let regexNom = /^[A-Z][a-zA-ZÀ-ÿ -]{3,30}$/;
   let messageErreur = `Le Nom doit commencer par une majuscule, contenir entre 3 et 30 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
   let testNom = regexNom.test(champNom.value);
   if (testNom) {
@@ -297,17 +303,7 @@ const validationAdresse = () => {
     champAdresse.nextElementSibling.textContent = messageErreur;
     return false;
   } //end if
-}; //end fonction nom
-
-//declaration fonction test validité champ selon règle navigateur
-const validationChamp = (champ) => {
-  if (champ.checkValidity()) {
-    return true;
-  } else {
-    champ.nextElementSibling.textContent = champ.validationMessage; // prop => message
-    return false;
-  } // end if
-}; //end fonction
+}; //end fonction adresse
 
 //declaration fonction validation ville
 
@@ -322,7 +318,17 @@ const validationVille = () => {
     champVille.nextElementSibling.textContent = messageErreur;
     return false;
   } //end if
-}; //end fonction nom
+}; //end fonction ville
+
+//declaration fonction test validité champ selon règle navigateur
+const validationChamp = (champ) => {
+  if (champ.checkValidity()) {
+    return true;
+  } else {
+    champ.nextElementSibling.textContent = champ.validationMessage; // prop => message
+    return false;
+  } // end if
+}; //end fonction
 
 //mise en place ecoute validation de chaque champ du formulaire
 
