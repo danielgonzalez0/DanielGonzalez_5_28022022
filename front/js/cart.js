@@ -408,5 +408,78 @@ formulaireCommande.addEventListener('submit', (event) => {
 
   if (valide) {
     confirm('le formulaire est envoyé');
+
+    //===================================================================================
+
+    // gestion envoi de la commande
+
+    //===================================================================================
+
+    //----------------------------------------------------------
+    //creation du tableau avec les ID des pdts commandés
+    //----------------------------------------------------------
+
+    let products = [];
+    let selectionProduitsCommandes = document.querySelectorAll('.cart__item');
+    selectionProduitsCommandes.forEach((produit) => {
+      let produitId = produit.getAttribute('data-id');
+      products.push(produitId);
+    }); //end foreach
+
+    //----------------------------------------------------------
+    //creation de l'objet formulaire
+    //----------------------------------------------------------
+
+    let contact = new Object();
+    contact.firstName = document.getElementById('firstName').value;
+    contact.lastName = document.getElementById('lastName').value;
+    contact.address = document.getElementById('address').value;
+    contact.city = document.getElementById('city').value;
+    contact.email = document.getElementById('email').value;
+
+    let objetAEnvoyer = { products, contact };
+
+    //----------------------------------------------------------
+    //envoi de l'objet contact et du tableau products vers l'API
+    //----------------------------------------------------------
+
+    const envoi = fetch('http://localhost:3000/api/products/order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(objetAEnvoyer),
+    }); //end fetch
+
+    //----------------------------------------------------------
+    //affichage de la réponse de l'API dans la console
+    // et récupération numéro de commande
+    //----------------------------------------------------------
+
+    envoi.then(
+      async (response) => {
+        try {
+          const contenu = await response.json();
+          const numeroDeCommande = contenu.orderId;
+          window.location.href = `http://127.0.0.1:5500/front/html/confirmation.html?id=${numeroDeCommande}'`;
+
+          console.log("-----réponse de l'Api--------");
+          console.log(envoi);
+          console.log(contenu);
+          console.log(numeroDeCommande);
+          console.log("-----réponse de l'Api--------");
+        } catch (error) {
+          //end try
+          console.log(error);
+        } //end catch
+      } //end callback
+    ); //end then
+
+    console.log('-----test validation commande------');
+    console.log(selectionProduitsCommandes);
+    console.log(products);
+    console.log(contact);
+    console.log(objetAEnvoyer);
+    console.log('-----test validation commande------');
   } //end if
 }); //end eventlistener

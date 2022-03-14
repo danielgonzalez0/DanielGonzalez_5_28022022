@@ -12,12 +12,12 @@ let positionElementDescription = document.getElementById('description');
 let positionElementColors = document.getElementById('colors');
 
 //récupération de la chaîne de requête de l'URL pour avoir l'ID
-let queryStringUrlId = window.location.search;
-console.log(queryStringUrlId);
+let requeteUrlId = window.location.search;
+console.log(requeteUrlId);
 
 // extraction de l'ID
 // méthode : utiliser le constructor new pour accéder à méthode get de l'api URLSearchParams
-let urlSearchParamsId = new URLSearchParams(queryStringUrlId);
+let urlSearchParamsId = new URLSearchParams(requeteUrlId);
 console.log(urlSearchParamsId);
 let productId = urlSearchParamsId.get('id');
 //get("name")=> se trouve dans l'url entre le ? et le = (?name=)
