@@ -177,13 +177,14 @@ for (let i = 0; i < zoneQuantiteAModifier.length; i++) {
 
   zoneQuantiteAModifier[i].addEventListener('blur', (event) => {
     event.preventDefault();
-
+    event.target.blur();
     let quantiteModifie = parseInt(zoneQuantiteAModifier[i].value);
 
     //step 1 test de la valeur saisie et gestion des exceptions
     try {
       if (quantiteModifie <= 0 || quantiteModifie > 100)
         throw 'la quantité saisie doit être comprise entre 1 et 100';
+
       if (isNaN(quantiteModifie))
         throw `la quantité doit être un nombre compris entre 1 et 100`;
 
@@ -223,6 +224,7 @@ for (let i = 0; i < zoneQuantiteAModifier.length; i++) {
       console.log(articleAModifier);
       console.log('=====test modification quantité======');
     } catch (error) {
+      //event.target.blur();
       alert(`L'erreur suivante est survenue: 
       
       ${error}`);
