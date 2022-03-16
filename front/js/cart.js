@@ -170,6 +170,7 @@ let zoneQuantiteAModifier = document.querySelectorAll('.itemQuantity');
 
 //boucle pour parcourir tous les boutons et mettre en place eventListener
 for (let i = 0; i < zoneQuantiteAModifier.length; i++) {
+  let quantiteInitiale = parseInt(zoneQuantiteAModifier[i].value);
   zoneQuantiteAModifier[i].addEventListener('change', (event) => {
     event.preventDefault();
     event.target.focus(); // pour résoudre problème lié à firefox (input type number ne déclenche pas le focus quand on change la quantité)
@@ -188,46 +189,50 @@ for (let i = 0; i < zoneQuantiteAModifier.length; i++) {
       if (isNaN(quantiteModifie))
         throw `la quantité doit être un nombre compris entre 1 et 100`;
 
-      //step 2 récupérer ID et couleur
-      let sectionAModifier = zoneQuantiteAModifier[i].closest('.cart__item');
-      let couleurProduitAModifier = sectionAModifier.getAttribute('data-color');
-      let idProduitAModifier = sectionAModifier.getAttribute('data-id');
-      //step 3 définir clé storage a modifier
-      let keyLocaleStorageAModifier = `${idProduitAModifier}//${couleurProduitAModifier}`;
+      if (quantiteModifie !== quantiteInitiale) {
+        //step 2 récupérer ID et couleur
+        let sectionAModifier = zoneQuantiteAModifier[i].closest('.cart__item');
+        let couleurProduitAModifier =
+          sectionAModifier.getAttribute('data-color');
+        let idProduitAModifier = sectionAModifier.getAttribute('data-id');
+        //step 3 définir clé storage a modifier
+        let keyLocaleStorageAModifier = `${idProduitAModifier}//${couleurProduitAModifier}`;
 
-      //step 4 Demander à l'utilisateur de confirmer la modification de l'article
-      let articleAModifier = JSON.parse(
-        localStorage.getItem(keyLocaleStorageAModifier)
-      );
-      let questionUtilisateur = confirm(
-        `Voulez-vous modifier la quantité d'article du produit ${articleAModifier[4]} ?
+        //step 4 Demander à l'utilisateur de confirmer la modification de l'article
+        let articleAModifier = JSON.parse(
+          localStorage.getItem(keyLocaleStorageAModifier)
+        );
+        let questionUtilisateur = confirm(
+          `Voulez-vous modifier la quantité d'article du produit ${articleAModifier[4]} ?
         
         La nouvelle quantité sera égale à ${quantiteModifie}.`
-      );
-      if (questionUtilisateur) {
-        //step 5 Modifier la quantité dans le panier
-        articleAModifier[2] = quantiteModifie;
-        //step 6 Supprimer l'article du local storage
-        localStorage.removeItem(keyLocaleStorageAModifier);
-        //step 7 on crée la nouvelle ligne dans le local storage
-        localStorage.setItem(
-          keyLocaleStorageAModifier,
-          JSON.stringify(articleAModifier)
         );
-        //step 8 recharger la page pour mettre à jour panier et totaux
-        window.location.href = 'cart.html';
-      } //end if confirmation modification
+        if (questionUtilisateur) {
+          //step 5 Modifier la quantité dans le panier
+          articleAModifier[2] = quantiteModifie;
+          //step 6 Supprimer l'article du local storage
+          localStorage.removeItem(keyLocaleStorageAModifier);
+          //step 7 on crée la nouvelle ligne dans le local storage
+          localStorage.setItem(
+            keyLocaleStorageAModifier,
+            JSON.stringify(articleAModifier)
+          );
+          //step 8 recharger la page pour mettre à jour panier et totaux
+          window.location.href = 'cart.html';
+        } //end if confirmation modification
 
-      console.log('=====test modification quantité======');
-      console.log(quantiteModifie);
-      console.log(keyLocaleStorageAModifier);
-      console.log(articleAModifier);
-      console.log('=====test modification quantité======');
+        console.log('=====test modification quantité======');
+        console.log(quantiteModifie);
+        console.log(keyLocaleStorageAModifier);
+        console.log(articleAModifier);
+        console.log('=====test modification quantité======');
+      } //end if
     } catch (error) {
       //event.target.blur();
       alert(`L'erreur suivante est survenue: 
       
       ${error}`);
+      zoneQuantiteAModifier[i].value = quantiteInitiale;
     } // end try & catch
   }); //end event listener
 } //end boucle for
