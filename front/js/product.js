@@ -13,15 +13,12 @@ let positionElementColors = document.getElementById('colors');
 
 //récupération de la chaîne de requête de l'URL pour avoir l'ID
 let requeteUrlId = window.location.search;
-console.log(requeteUrlId);
 
 // extraction de l'ID
 // méthode : utiliser le constructor new pour accéder à méthode get de l'api URLSearchParams
 let urlSearchParamsId = new URLSearchParams(requeteUrlId);
-console.log(urlSearchParamsId);
 let productId = urlSearchParamsId.get('id');
 //get("name")=> se trouve dans l'url entre le ? et le = (?name=)
-console.log(productId);
 
 //affichage du produit rattaché à l'ID de l'url
 
@@ -35,20 +32,28 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 
   //promise pour ajouter les données du produit
   .then(function (pdt) {
-    console.log(pdt);
-
     positionElementImg.innerHTML = `<img src=${pdt.imageUrl} alt="${pdt.altTxt}" />`;
     positionElementTitre.innerText = pdt.name;
     positionElementPrix.innerText = pdt.price;
     positionElementDescription.innerText = pdt.description;
     //boucle for pour afficher les différents choix de couleurs
-    console.log(pdt.colors);
+
     let arrayOfColors = pdt.colors;
     let listOfColors = '';
     for (let color in arrayOfColors) {
       listOfColors = `<option value=${arrayOfColors[color]}>${arrayOfColors[color]}</option>`;
       positionElementColors.insertAdjacentHTML('beforeend', listOfColors);
     } //fin boucle for
+
+    //test console
+    console.log('--------test recuperation ID--------');
+    console.log(requeteUrlId);
+    console.log(productId);
+    console.log('--------test recuperation ID--------');
+    console.log('--------test recuperation données pdt via API--------');
+    console.log(pdt);
+    console.log(pdt.colors);
+    console.log('--------test recuperation données pdt via API--------');
   }) // fin promise .then
 
   // gestion des erreurs sur chargement données via l'API
@@ -76,7 +81,9 @@ let choixColor = '';
 
 selectOptionColor.addEventListener('change', () => {
   choixColor = selectOptionColor.options[selectOptionColor.selectedIndex].value;
+  console.log('--------test choix couleur--------');
   console.log(choixColor);
+  console.log('--------test choix couleur--------');
   return choixColor;
 }); // end eventListener
 
@@ -89,7 +96,9 @@ selectQuantite.addEventListener('change', () => {
       throw 'la quantité choisie doit être comprise entre 1 et 100';
 
     choixQuantite = selectQuantite.value;
+    console.log('--------test choix quantité--------');
     console.log(choixQuantite);
+    console.log('--------test choix quantité--------');
 
     return choixQuantite;
   } catch (error) {
@@ -146,7 +155,6 @@ ajoutPanier.addEventListener('click', () => {
     if (ligneProduitsDansLocalStorage) {
       let quantiteEnregistre = parseInt(ligneProduitsDansLocalStorage[2]);
       let quantiteModifie = quantiteEnregistre + parseInt(choixQuantite);
-      console.log(quantiteModifie);
 
       //test quantité <= 100
 
@@ -162,7 +170,15 @@ ajoutPanier.addEventListener('click', () => {
         if (questionUtilisateur) {
           //2) on met à jour la ligne de panier avec nouvelle quantité
           lignePanier[2] = quantiteModifie;
+
+          //test console log
+          console.log('--------test produit déjà dans le panier--------');
+          console.log(ligneProduitsDansLocalStorage);
+          console.log('--------test produit déjà dans le panier--------');
+          console.log('--------test valeur quantité modifiée--------');
+          console.log(quantiteModifie);
           console.log(lignePanier);
+          console.log('--------test valeur quantité modifiée--------');
 
           //3) on supprime la ligne du local storage
           localStorage.removeItem(lignePanier.name);
@@ -170,7 +186,6 @@ ajoutPanier.addEventListener('click', () => {
           //4) on crée la nouvelle ligne dans le local storage
 
           localStorage.setItem(lignePanier.name, JSON.stringify(lignePanier));
-          console.log(ligneProduitsDansLocalStorage);
           alert('Article(s) ajouté(s) au panier');
         } //end if confirm
       } // end if test quantité

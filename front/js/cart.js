@@ -12,15 +12,15 @@ let listeDesAchats = '';
 //boucle pour récupérer les achats dans le localStorage et créer le tableau récap
 
 for (let i = 0; i < localStorage.length; i++) {
-  // console.log(localStorage.getItem(localStorage.key(i)));
-
   // récupérer et convertir en JS l'achat stocké dans le local storage (clé + valeurs)
   let achatRecupere = localStorage.getItem(localStorage.key(i));
   let achatFormate = JSON.parse(achatRecupere);
+
+  // console.log(localStorage.getItem(localStorage.key(i)));
   //console.log(achatFormate);
 
   //Ajuster le prix en fonction des quantités
-  let achatQuantite = parseInt(achatFormate[2]);
+  //let achatQuantite = parseInt(achatFormate[2]);
   let achatPrix = parseInt(achatFormate[3]);
 
   // créer le récapitulatif de l'achat dans le panier
@@ -60,6 +60,13 @@ for (let i = 0; i < localStorage.length; i++) {
                 </div>
               </article>`;
   positionAffichageAchat.insertAdjacentHTML('beforeend', listeDesAchats);
+
+  //test console
+
+  console.log('=======test récupération des achats ===========');
+  console.log(localStorage.getItem(localStorage.key(i)));
+  console.log(achatFormate);
+  console.log('=======test récupération des achats ===========');
 } //end boucle for
 
 //===================================================================================
@@ -82,7 +89,6 @@ const calculQuantite = () => {
   let quantiteTotale = 0;
   for (let quantite of quantiteSelection) {
     quantiteTotale = quantiteTotale + parseInt(quantite.value);
-    // console.log(quantiteTotale);
   } //end boucle
   return quantiteTotale;
 }; //end fonction
@@ -99,7 +105,6 @@ const calculPrix = () => {
     //conversion string => number
     prixFormatTexte = prixFormatTexte.replaceAll('\u202F', '');
     let prixFormatNombre = parseInt(prixFormatTexte);
-    //console.log(prixFormatNombre);
     //selection de l'élément ou se trouve la quantité
     let quantiteProduit = prixSelection[i].querySelector('.itemQuantity').value;
     //calcul Prix du produit
@@ -263,16 +268,19 @@ console.log('=====test formulaire======');*/
 
 const validationPrenom = () => {
   let champPrenom = document.getElementById('firstName');
-  let regexPrenom = /^[A-Za-zA-ZÀ-ÿ -]{3,20}$/;
+  let regexPrenom = /^[A-Z][a-zA-ZÀ-ÿ -]{3,20}$/;
   let messageErreur = `Le Prénom doit commencer par une majuscule, contenir entre 3 et 20 caractères et ne doit pas contenir de chiffres ou de caractères spéciaux hors "-" et " ".`;
   let testPrenom = regexPrenom.test(champPrenom.value);
-  /* console.log('=====test validation prenom=====');
+
+  //test console
+  /*console.log('=====test validation prenom=====');
   console.log('valeur dans champ prénom :' + champPrenom.value);
   console.log(regexPrenom);
   console.log('resultat test prenom: ' + testPrenom);
   console.log(messageErreur);
   console.log('valide = ' + valide);
   console.log('=====test validation prenom=====');*/
+
   if (testPrenom) {
     return true;
   } else {
@@ -414,8 +422,6 @@ formulaireCommande.addEventListener('submit', (event) => {
   console.log('apres la boucle submit, valide = ' + valide);
 
   if (valide) {
-    confirm('le formulaire est envoyé');
-
     //===================================================================================
 
     // gestion envoi de la commande

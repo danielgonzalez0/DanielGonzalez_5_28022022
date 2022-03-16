@@ -36,4 +36,4 @@ fetch('http://localhost:3000/api/products/')
   .catch(function (error) {
     alert(`l'erreur suivante est survenue:
      ${error}`);
-  }); // fin fct fetch
+  }); // fin fct catch
