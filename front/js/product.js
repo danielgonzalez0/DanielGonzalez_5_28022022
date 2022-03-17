@@ -103,6 +103,7 @@ selectQuantite.addEventListener('change', () => {
     return choixQuantite;
   } catch (error) {
     alert(`L'erreur suivante est survenue: ${error}`);
+    selectQuantite.value = 0;
   } // end try & catch
 }); // end eventListener
 

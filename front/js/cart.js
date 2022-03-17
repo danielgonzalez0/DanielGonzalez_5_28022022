@@ -253,6 +253,9 @@ let formulaireCommande = document.querySelector('.cart__order__form');
 let champsFormulaire = document.querySelectorAll('input[required]');
 let valide = true;
 
+//neutralisation messages du navigateur
+formulaireCommande.setAttribute('novalidate', true);
+
 //declaration fonction reset du message d'erreur
 const resetMessageErreurValidation = (champ) => {
   champ.nextElementSibling.textContent = '';
